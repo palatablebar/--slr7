@@ -6,12 +6,14 @@ from app.models.lineage_edge import LineageEdge
 from app.models.quota import Quota
 from app.models.schema_change_event import SchemaChangeEvent
 from app.models.transformation import Transformation
+from app.models.transformation_draft import TransformationDraft
 from app.models.user import User
 
 __all__ = [
     "User",
     "DataAsset",
     "Transformation",
+    "TransformationDraft",
     "LineageEdge",
     "ImpactAnalysis",
     "SchemaChangeEvent",

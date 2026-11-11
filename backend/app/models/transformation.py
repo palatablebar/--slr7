@@ -37,3 +37,10 @@ class Transformation(Base):
     owner = relationship("User", back_populates="transformations")
     output_asset = relationship("DataAsset", foreign_keys=[output_asset_id])
     edges = relationship("LineageEdge", back_populates="transformation", cascade="all, delete-orphan")
+    # 一对一草稿：未上线的编辑留在 draft 里，主表始终代表最近一次上线版本
+    draft = relationship(
+        "TransformationDraft",
+        back_populates="transformation",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )

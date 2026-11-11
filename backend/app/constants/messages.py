@@ -4,6 +4,12 @@ MSG_PARTIAL_STAR_HINT = "该段 SQL 的 SELECT * 无法完全展开：上游资�
 MSG_NO_DOWNSTREAM = "该列没有下游引用，变更不会影响其它资产。"
 MSG_PARSE_OK = "解析完成，已整体替换该转换的血缘边集合。"
 MSG_PARSE_FAILED = "解析失败：{raw}"
+MSG_DRAFT_SAVED_FAILED = (
+    "草稿已保存，但 SQL 解析未通过：错误内容留在草稿中，已上线版本的列级血缘与影响分析保持不变。"
+)
+MSG_DRAFT_PROMOTED = "草稿解析通过，已一次性切换为新的上线版本（血缘边整体替换，无中间状态）。"
+MSG_DRAFT_DISCARDED = "草稿已丢弃，恢复到当前上线版本。"
+MSG_DRAFT_BUSY = "草稿仍未通过解析校验，不能发布；请修正 SQL 后重新保存。"
 MSG_IMPACT_CACHED = "命中同参数的历史影响分析快照，未重新计算。"
 MSG_ASSET_CREATED = "资产已登记。"
 MSG_TRANSFORMATION_SAVED = "SQL 已保存，版本号 +1。"

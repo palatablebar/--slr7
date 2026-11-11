@@ -104,8 +104,8 @@ gb-546/
 │   ├── app/
 │   │   ├── main.py             # 入口：lifespan 建表 + seed，注册中间件与路由
 │   │   ├── config/             # settings / database / redis / storage / logging
-│   │   ├── models/             # 8 张表：users / data_assets / transformations / lineage_edges /
-│   │   │                       #        impact_analyses / schema_change_events / audit_logs / quotas
+│   │   ├── models/             # 9 张表：users / data_assets / transformations / transformation_drafts /
+│   │   │                       #        lineage_edges / impact_analyses / schema_change_events / audit_logs / quotas
 │   │   ├── schemas/            # pydantic v2（common/user/data_asset/transformation/lineage/impact/quota/audit）
 │   │   ├── routes/             # auth / assets / transformations / lineage / impact / quota / audit / health
 │   │   ├── controllers/        # 只做装配与响应包装（按实体分文件）
@@ -116,7 +116,7 @@ gb-546/
 │   │   ├── utils/              # jwt / password / logger / formatters / pagination / hashing / errors
 │   │   ├── constants/          # asset / lineage / parse / impact / change / edge / roles / error_codes /
 │   │   │                       # log_templates（38 条模板）/ messages / limits
-│   │   ├── alembic/            # env.py + versions/0001_initial.py
+│   │   ├── alembic/            # env.py + versions/0001_initial.py + 0002_drafts.py（草稿表）
 │   │   └── scripts/            # seed_demo.py（幂等）/ wait_for_db.py
 │   └── scripts/                # 容器内可执行：python -m scripts.seed_demo
 ├── worker/                     # 独立容器（复用 backend 镜像，PYTHONPATH=/app/backend:/app）
@@ -190,6 +190,16 @@ gb-546/
 | 表达式 | `CAST / CONCAT / CASE / 算术` | `parsed` | `derived`，`expression_text` 存原始片段（≤512 字符） |
 | 无法解析 | `SELECT * FORM x` | **`failed`** | 无边；`parse_error` 保留 sqlglot 原文 + `line/col` |
 | 裸列多候选 | JOIN 两侧同名列 | `partial` | 取最内层作用域并记 warning |
+
+### 草稿与上线分离（解析失败不丢血缘）
+
+编辑 SQL 时写入的是 `transformation_drafts` 草稿表，而不是直接覆盖 `transformations` 主表：
+
+1. **保存草稿即校验**：`PATCH /api/transformations/:id` 把 SQL/方言/输入输出资产存入草稿并解析。
+   - 解析**失败**：返回 HTTP 200 + `promoted=false`，错误原文与 `line/col` 留在草稿（`draft.parse_status=failed`）；已上线 `Transformation` 的 `parse_status`、版本号、血缘边、影响分析结果**全部保持不变**，血缘图仍可追溯原本的下游报表。
+   - 解析**通过**（`parsed/partial`）：在**单个数据库事务**内完成「删旧边 → 插新边 → 回写 SQL/状态/报告 → 版本号 +1 → 删除草稿」，任一步失败整体 `rollback`，不会出现只更新一半关系的中间状态。
+2. `failed` 草稿**永远不会被发布**：`promote_draft` 对失败草稿直接拒绝（`E_PARSE_FAILED`），未通过校验的内容不会被当成上线版本，血缘图与影响分析只读取已上线边。
+3. 可随时 `POST /api/transformations/:id/discard-draft` 丢弃草稿、恢复到当前上线版本；前端在草稿失败时高亮出错行并明确提示「已上线血缘未受影响」。
 
 > 说明：`UNION` / `EXCEPT` / `INTERSECT` 暂未做列级展开，会显式标 `partial` 而不是假装解析成功。
 > 同一条 `(transformation, source_column, target_column)` 只保留一条边（数据库唯一约束），因此 `join_key` 作为更具体的类型**替代**同对的 `direct`，不新增第二条边。

@@ -44,11 +44,37 @@ class TransformationOut(BaseModel):
     output_asset_name: str | None = None
     owner_display_name: str | None = None
     edge_count: int = 0
+    has_draft: bool = False
+    draft: "TransformationDraftOut | None" = None
+
+
+class TransformationDraftOut(BaseModel):
+    """未上线草稿：状态只代表草稿本身，不代表已上线版本。"""
+
+    id: uuid.UUID
+    sql_text: str
+    dialect: str
+    input_asset_ids_json: list
+    output_asset_id: uuid.UUID
+    parse_status: ParseStatusLiteral
+    parse_error: str | None = None
+    error_line: int | None = None
+    error_column: int | None = None
+    report_json: dict = Field(default_factory=dict)
+    updated_at: datetime
 
 
 class TransformationDetail(TransformationOut):
     input_assets: list[dict] = Field(default_factory=list)
     edges: list[dict] = Field(default_factory=list)
+
+
+class DraftSaveResult(BaseModel):
+    """保存草稿的结果：promoted=False 时上线血缘未变，错误在 draft 中。"""
+
+    promoted: bool
+    message: str
+    transformation: TransformationDetail
 
 
 class ParseRequest(BaseModel):

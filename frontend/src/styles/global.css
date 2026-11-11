@@ -701,6 +701,11 @@ textarea {
   background: var(--danger-soft);
 }
 
+.notice.ok {
+  border-left-color: oklch(0.72 0.12 150);
+  background: color-mix(in oklch, oklch(0.72 0.12 150) 14%, transparent);
+}
+
 /* ---------- 登录页 ---------- */
 .login-page {
   min-height: 100vh;

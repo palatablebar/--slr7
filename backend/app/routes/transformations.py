@@ -73,7 +73,8 @@ def update_transformation(
     sql_text = payload.sql_text or transformation.sql_text
     started = time.time()
     with ParseGuard(db, user, sql_text):
-        transformation = transformation_service.update_transformation(
+        # 保存为草稿并校验：失败只留草稿（HTTP 仍 200），成功才原子发布
+        result = transformation_controller.save_draft_payload(
             db, user, transformation_id, payload.model_dump(exclude_unset=True)
         )
     ensure_not_timeout(time.time() - started)
@@ -83,9 +84,31 @@ def update_transformation(
         action="AUDIT_SQL_CHANGED",
         entity_type="transformation",
         entity_id=transformation_id,
-        payload={"sql_text": sql_text, "version": transformation.version},
+        payload={
+            "sql_text": sql_text,
+            "version": result["transformation"]["version"],
+            "promoted": result["promoted"],
+        },
     )
-    return transformation_controller.detail_payload(db, transformation_id)
+    return result
+
+
+@router.post("/{transformation_id}/discard-draft")
+def discard_draft(
+    transformation_id: uuid.UUID,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_capability("transformation:write")),
+) -> dict:
+    detail = transformation_controller.discard_draft_payload(db, user, transformation_id)
+    audit_logger.mark(
+        request,
+        action="AUDIT_WRITE",
+        entity_type="transformation",
+        entity_id=transformation_id,
+        payload={"action": "discard_draft"},
+    )
+    return detail
 
 
 @router.post("/{transformation_id}/parse")
