@@ -1,0 +1,26 @@
+"""集中式错误码。"""
+E_UNAUTHORIZED = "E_UNAUTHORIZED"
+E_FORBIDDEN = "E_FORBIDDEN"
+E_NOT_FOUND = "E_NOT_FOUND"
+E_VALIDATION = "E_VALIDATION"
+E_PARSE_FAILED = "E_PARSE_FAILED"
+E_PARSE_TIMEOUT = "E_PARSE_TIMEOUT"
+E_PARSE_QUOTA = "E_PARSE_QUOTA"
+E_ASSET_IN_USE = "E_ASSET_IN_USE"
+E_CYCLE_UNRESOLVED = "E_CYCLE_UNRESOLVED"
+E_CONFLICT = "E_CONFLICT"
+E_INTERNAL = "E_INTERNAL"
+
+ERROR_MESSAGES = {
+    E_UNAUTHORIZED: "登录状态已失效，请重新登录",
+    E_FORBIDDEN: "当前角色无权执行该操作",
+    E_NOT_FOUND: "对象不存在",
+    E_VALIDATION: "请求参数不合法",
+    E_PARSE_FAILED: "SQL 解析失败，原始错误与行列号见 parse_error",
+    E_PARSE_TIMEOUT: "SQL 解析超时（超过 8 秒），已保留已解析部分",
+    E_PARSE_QUOTA: "解析配额已用尽",
+    E_ASSET_IN_USE: "资产仍被转换引用，无法删除",
+    E_CYCLE_UNRESOLVED: "血缘图存在未截断的环",
+    E_CONFLICT: "资源版本冲突",
+    E_INTERNAL: "服务内部错误",
+}

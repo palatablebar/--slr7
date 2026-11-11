@@ -1,0 +1,12 @@
+"""前后端共用的提示文案（后端返回文案 / 前端提示 / 日志摘要三用）。"""
+
+MSG_PARTIAL_STAR_HINT = "该段 SQL 的 SELECT * 无法完全展开：上游资产 {asset} 的列清单缺少列 {missing}。补全上游列清单后重解析即可转为 parsed。"
+MSG_NO_DOWNSTREAM = "该列没有下游引用，变更不会影响其它资产。"
+MSG_PARSE_OK = "解析完成，已整体替换该转换的血缘边集合。"
+MSG_PARSE_FAILED = "解析失败：{raw}"
+MSG_IMPACT_CACHED = "命中同参数的历史影响分析快照，未重新计算。"
+MSG_ASSET_CREATED = "资产已登记。"
+MSG_TRANSFORMATION_SAVED = "SQL 已保存，版本号 +1。"
+MSG_VIEWER_FORBIDDEN = "报表 owner（viewer）只读：不能发起影响分析，请使用数据开发（analyst）账号。"
+MSG_EMPTY_ASSET = "还没有资产。先登记一张表资产，例如 ods.orders。"
+MSG_EMPTY_LINEAGE = "先选一个起点资产，或从资产目录挑一个。"

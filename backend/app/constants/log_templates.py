@@ -1,0 +1,45 @@
+"""集中式日志模板（>= 22 条），全部经 utils/logger.py 输出。"""
+
+PARSE_START = "PARSE_START transformation={transformation} dialect={dialect} sql_bytes={bytes}"
+PARSE_OK = "PARSE_OK transformation={transformation} edges={edges} status={status}"
+PARSE_PARTIAL = "PARSE_PARTIAL transformation={transformation} reason={reason}"
+PARSE_PARTIAL_STAR = "PARSE_PARTIAL_STAR asset={asset} column={column} missing={missing}"
+PARSE_FAILED_WITH_POS = "PARSE_FAILED_WITH_POS transformation={transformation} message={message} line={line} col={col}"
+PARSE_TIMEOUT = "PARSE_TIMEOUT transformation={transformation} elapsed_ms={elapsed}"
+PARSE_QUOTA_REJECT = "PARSE_QUOTA_REJECT user={user} used={used} max={max}"
+PARSE_GUARD_REJECT = "PARSE_GUARD_REJECT user={user} reason={reason} bytes={bytes}"
+
+LINEAGE_EDGES_REBUILT = "LINEAGE_EDGES_REBUILT transformation={transformation} inserted={inserted} deleted={deleted}"
+LINEAGE_CTA_EXPANDED = "LINEAGE_CTA_EXPANDED transformation={transformation} cte={cte} columns={columns}"
+LINEAGE_SUBQUERY_SCOPE = "LINEAGE_SUBQUERY_SCOPE transformation={transformation} alias={alias} conflict={conflict}"
+LINEAGE_JOIN_KEY = "LINEAGE_JOIN_KEY transformation={transformation} pair={pair}"
+LINEAGE_AMBIGUOUS_COLUMN = "LINEAGE_AMBIGUOUS_COLUMN transformation={transformation} column={column} candidates={candidates}"
+
+CYCLE_DETECTED = "CYCLE_DETECTED components={components} sample={sample}"
+IMPACT_START = "IMPACT_START asset={asset} column={column} change_type={change_type}"
+IMPACT_GRADED = "IMPACT_GRADED severity={severity} affected={affected} reports={reports} min_depth={depth}"
+IMPACT_TRUNCATED = "IMPACT_TRUNCATED depth_limit={limit} affected={affected}"
+IMPACT_CACHE_HIT = "IMPACT_CACHE_HIT analysis={analysis} asset={asset} column={column}"
+
+ASSET_CREATED = "ASSET_CREATED asset={asset} type={type}"
+ASSET_UPDATED = "ASSET_UPDATED asset={asset} columns={columns}"
+ASSET_DELETED = "ASSET_DELETED asset={asset}"
+SCHEMA_CHANGE_RECORDED = "SCHEMA_CHANGE_RECORDED asset={asset} column={column} change_type={change_type} old={old} new={new}"
+
+AUTH_LOGIN_OK = "AUTH_LOGIN_OK user={user} role={role}"
+AUTH_LOGIN_FAIL = "AUTH_LOGIN_FAIL email={email}"
+RBAC_FORBIDDEN = "RBAC_FORBIDDEN user={user} role={role} capability={capability}"
+
+AUDIT_SQL_CHANGED = "AUDIT_SQL_CHANGED actor={actor} transformation={transformation} version={version} sha256={sha256}"
+AUDIT_WRITE = "AUDIT_WRITE actor={actor} action={action} entity={entity} result={result}"
+AUDIT_IMPACT_REQUESTED = "AUDIT_IMPACT_REQUESTED actor={actor} asset={asset} column={column} change_type={change_type}"
+
+WORKER_TASK_START = "WORKER_TASK_START task={task} id={id}"
+WORKER_TASK_DONE = "WORKER_TASK_DONE task={task} id={id} elapsed_ms={elapsed}"
+WORKER_TASK_FAILED = "WORKER_TASK_FAILED task={task} id={id} error={error}"
+
+ARTIFACT_WRITTEN = "ARTIFACT_WRITTEN kind={kind} path={path} bytes={bytes}"
+SEED_START = "SEED_START"
+SEED_DONE = "SEED_DONE users={users} assets={assets} transformations={transformations} edges={edges}"
+SEED_SKIPPED = "SEED_SKIPPED reason={reason}"
+SEED_FAILED = "SEED_FAILED error={error}"

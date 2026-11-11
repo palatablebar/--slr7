@@ -1,0 +1,19 @@
+:root {
+  --deep: oklch(0.235 0.035 250);
+  --deep-2: oklch(0.29 0.038 250);
+  --parch: oklch(0.925 0.018 85);
+  --brass: oklch(0.78 0.11 85);
+  --ink: oklch(0.2 0.02 250);
+  --muted: oklch(0.64 0.02 250);
+  --warn: oklch(0.64 0.17 45);
+  --deep-line: oklch(0.35 0.03 250 / 0.55);
+  --parch-2: oklch(0.885 0.02 85);
+  --brass-dim: oklch(0.78 0.11 85 / 0.35);
+  --brass-soft: oklch(0.78 0.11 85 / 0.14);
+  --danger-soft: oklch(0.64 0.17 45 / 0.14);
+  --radius: 2px;
+  --font-display: 'Marcellus', Georgia, 'Songti SC', serif;
+  --font-body: 'IBM Plex Sans', 'PingFang SC', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --grid: 64px;
+}
